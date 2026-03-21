@@ -4,11 +4,13 @@ import { getTeamMeta } from "@/constants/teams";
 
 interface DriverStandingsTableProps {
   standings: ProcessedDriver[];
+  season?: string;
   limit?: number;
 }
 
 export function DriverStandingsTable({
   standings,
+  season,
   limit = 10,
 }: DriverStandingsTableProps) {
   const shown = standings.slice(0, limit);
@@ -39,7 +41,7 @@ export function DriverStandingsTable({
           return (
             <Link
               key={driver.driverId}
-              href={`/drivers/${driver.driverId}`}
+              href={season ? `/drivers/${driver.driverId}?season=${season}` : `/drivers/${driver.driverId}`}
               className="grid grid-cols-[2rem_1fr_auto_auto] items-center gap-3 px-4 py-3 border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface-raised)] transition-colors group"
             >
 

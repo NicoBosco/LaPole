@@ -1,37 +1,43 @@
-import { describe, it, expect } from "vitest";
-import { resolveSeason, getComparisonSeasons } from "@/lib/utils/season";
-import { CURRENT_SEASON } from "@/constants/config";
+import { describe, expect, it } from "vitest";
+import { CURRENT_SEASON, PREVIOUS_SEASON } from "@/constants/config";
+import { getComparisonSeasons, resolveSeason } from "@/lib/utils/season";
 
 describe("season utilities", () => {
   describe("resolveSeason", () => {
-    it("returns naturally current season on empty param", () => {
+    it("returns the current season when the input is empty", () => {
       expect(resolveSeason(undefined)).toBe(CURRENT_SEASON);
       expect(resolveSeason(null)).toBe(CURRENT_SEASON);
     });
 
-    it("returns current season on invalid param", () => {
+    it("returns the current season when the input is invalid", () => {
       expect(resolveSeason("2010")).toBe(CURRENT_SEASON);
       expect(resolveSeason("invalid")).toBe(CURRENT_SEASON);
     });
 
-    it("returns exactly the valid requested season", () => {
-      expect(resolveSeason("2025")).toBe("2025");
-      expect(resolveSeason("2026")).toBe("2026");
+    it("returns a supported season unchanged", () => {
+      expect(resolveSeason(CURRENT_SEASON)).toBe(CURRENT_SEASON);
+      expect(resolveSeason(PREVIOUS_SEASON)).toBe(PREVIOUS_SEASON);
     });
   });
 
   describe("getComparisonSeasons", () => {
-    it("returns mathematically right current and previous seasons", () => {
-      expect(getComparisonSeasons("2026")).toEqual(["2026", "2025"]);
-      expect(getComparisonSeasons("2025")).toEqual(["2025", "2024"]);
-      expect(getComparisonSeasons("2020")).toEqual(["2020", "2019"]);
+    it("returns the selected season and the immediately previous one", () => {
+      const expectedPrevious = (Number.parseInt(PREVIOUS_SEASON, 10) - 1).toString();
+
+      expect(getComparisonSeasons(CURRENT_SEASON)).toEqual([
+        CURRENT_SEASON,
+        PREVIOUS_SEASON,
+      ]);
+      expect(getComparisonSeasons(PREVIOUS_SEASON)).toEqual([
+        PREVIOUS_SEASON,
+        expectedPrevious,
+      ]);
     });
 
-    it("handles invalid inputs falling back safely", () => {
-      const fallbackCurrentInt = parseInt(CURRENT_SEASON, 10);
+    it("falls back to the current season when the input is invalid", () => {
       expect(getComparisonSeasons("abc")).toEqual([
-        "abc",
-        (fallbackCurrentInt - 1).toString(),
+        CURRENT_SEASON,
+        PREVIOUS_SEASON,
       ]);
     });
   });

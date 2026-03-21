@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import { getDriverStandings } from "@/lib/api/races";
-import { EmptyState } from "@/components/ui/EmptyState";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { SeasonSelector } from "@/components/ui/SeasonSelector";
 import { DriversPageClient } from "./DriversPageClient";
 import { resolveSeason } from "@/lib/utils/season";
 
@@ -26,14 +28,26 @@ export default async function DriversPage({ searchParams }: DriversPageProps) {
   if (!standings) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <EmptyState
-          title="Error al cargar pilotos"
-          description="No se pudieron obtener los datos. Verificá tu conexión e intentá recargar."
-          icon="⚠️"
-        />
+        <div className="mb-6 flex justify-end">
+          <Suspense fallback={null}>
+            <SeasonSelector currentSeason={season} />
+          </Suspense>
+        </div>
+        <ErrorState message="No se pudieron obtener los pilotos de la temporada seleccionada." />
       </div>
     );
   }
 
-  return <DriversPageClient standings={standings} season={season} />;
+  return (
+    <>
+      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+        <div className="flex justify-end">
+          <Suspense fallback={null}>
+            <SeasonSelector currentSeason={season} />
+          </Suspense>
+        </div>
+      </div>
+      <DriversPageClient standings={standings} season={season} />
+    </>
+  );
 }

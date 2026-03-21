@@ -9,12 +9,13 @@ import { RaceCalendarRow } from "@/components/dashboard/RaceCalendarRow";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SeasonSelector } from "@/components/ui/SeasonSelector";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { CardSkeleton, TableRowSkeleton } from "@/components/ui/Skeleton";
 import { resolveSeason } from "@/lib/utils/season";
 
 export const metadata = {
   title: "LaPole — F1 Dashboard",
-  description: "Sigue la temporada de Fórmula 1: próxima carrera, clasificaciones y resultados.",
+  description: "Seguimiento de la temporada de Fórmula 1 con carreras, clasificaciones y resultados actualizados periódicamente.",
 };
 
 interface HomePageProps {
@@ -123,13 +124,7 @@ async function NextRaceSection({ season }: { season: string }) {
   }
 
   if (!races) {
-    return (
-      <EmptyState
-        title="No pudimos cargar la próxima carrera"
-        description="Fallo la conexión con la API de F1. Probá recargando."
-        icon="⚠️"
-      />
-    );
+    return <ErrorState message="No pudimos cargar la próxima carrera." />;
   }
 
   const nextRace = races.find((r) => r.isNext);
@@ -153,7 +148,7 @@ async function DriverStandingsSection({ season }: { season: string }) {
     standings = null;
   }
 
-  if (!standings) return <EmptyState title="No pudimos cargar a los pilotos" icon="⚠️" />;
+  if (!standings) return <ErrorState message="No pudimos cargar la clasificación de pilotos." />;
 
   if (standings.length === 0) {
     return (
@@ -164,7 +159,7 @@ async function DriverStandingsSection({ season }: { season: string }) {
       />
     );
   }
-  return <DriverStandingsTable standings={standings} limit={22} />;
+  return <DriverStandingsTable standings={standings} season={season} limit={22} />;
 }
 
 async function ConstructorStandingsSection({ season }: { season: string }) {
@@ -175,7 +170,7 @@ async function ConstructorStandingsSection({ season }: { season: string }) {
     standings = null;
   }
 
-  if (!standings) return <EmptyState title="No pudimos cargar a los equipos" icon="⚠️" />;
+  if (!standings) return <ErrorState message="No pudimos cargar la clasificación de constructores." />;
 
   if (standings.length === 0) {
     return (
@@ -186,7 +181,7 @@ async function ConstructorStandingsSection({ season }: { season: string }) {
       />
     );
   }
-  return <ConstructorStandingsTable standings={standings} limit={11} />;
+  return <ConstructorStandingsTable standings={standings} season={season} limit={11} />;
 }
 
 async function LastRaceSection({ season }: { season: string }) {
@@ -198,7 +193,7 @@ async function LastRaceSection({ season }: { season: string }) {
     hasError = true;
   }
 
-  if (hasError) return <EmptyState title="Hubo un error cargando los resultados" icon="⚠️" />;
+  if (hasError) return <ErrorState message="Hubo un error al cargar los resultados de la última carrera." />;
 
   if (!race) {
     return (
@@ -220,7 +215,7 @@ async function CalendarSection({ season }: { season: string }) {
     races = null;
   }
 
-  if (!races) return <EmptyState title="Error al cargar el calendario" icon="⚠️" />;
+  if (!races) return <ErrorState message="No pudimos cargar el calendario de la temporada." />;
 
   if (races.length === 0) {
     return <EmptyState title="Sin calendario disponible" icon="📅" />;
@@ -247,7 +242,7 @@ async function ConstructorChartSection({ season }: { season: string }) {
     standings = null;
   }
 
-  if (!standings) return <EmptyState title="Error al cargar el gráfico" icon="⚠️" />;
+  if (!standings) return <ErrorState message="No pudimos cargar el gráfico de constructores." />;
 
   if (standings.length === 0) {
     return <EmptyState title="Sin datos de constructores" icon="📊" />;

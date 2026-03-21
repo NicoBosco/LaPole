@@ -19,7 +19,7 @@ export function Footer() {
             </a>
           </p>
           <p className="text-xs text-[var(--color-text-muted)] text-center sm:text-right">
-            Proyecto de portfolio perteneciente a{" "}
+            Proyecto de portfolio de{" "}
             <span className="text-[var(--color-text-secondary)]">Bosco Mateo Nicolás</span>{" "}
             — No afiliado a la Fórmula 1
           </p>

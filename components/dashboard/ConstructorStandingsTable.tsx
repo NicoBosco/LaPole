@@ -4,11 +4,13 @@ import { getTeamMeta } from "@/constants/teams";
 
 interface ConstructorStandingsTableProps {
   standings: ProcessedConstructor[];
+  season?: string;
   limit?: number;
 }
 
 export function ConstructorStandingsTable({
   standings,
+  season,
   limit = 10,
 }: ConstructorStandingsTableProps) {
   const shown = standings.slice(0, limit);
@@ -31,7 +33,7 @@ export function ConstructorStandingsTable({
           return (
             <Link
               key={standing.constructorId}
-              href={`/constructors/${standing.constructorId}`}
+              href={season ? `/constructors/${standing.constructorId}?season=${season}` : `/constructors/${standing.constructorId}`}
               className="grid grid-cols-[2rem_1fr_auto_auto] items-center gap-3 px-4 py-3 border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface-raised)] transition-colors group"
             >
               <span

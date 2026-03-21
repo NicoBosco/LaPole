@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDriverById, getDriverCurrentStanding, getDriverSeasonResults } from "@/lib/api/drivers";
@@ -5,6 +6,7 @@ import { getTeamMeta } from "@/constants/teams";
 import { getNationalityFlag, formatRaceDate } from "@/lib/utils/formatters";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
+import { SeasonSelector } from "@/components/ui/SeasonSelector";
 import { resolveSeason, getComparisonSeasons } from "@/lib/utils/season";
 import { DriverPerformanceChart } from "@/components/drivers/DriverPerformanceChart";
 
@@ -34,7 +36,9 @@ export default async function DriverDetailPage({ params, searchParams }: DriverD
     getDriverCurrentStanding(driverId, season).catch(() => null),
     getDriverSeasonResults(driverId, currentYear).catch(() => []),
     getDriverSeasonResults(driverId, prevYear).catch(() => []),
-  ]);  if (!driver) notFound();
+  ]);
+
+  if (!driver) notFound();
 
   const teamMeta = getTeamMeta(standing?.teamId ?? "");
   const flag = getNationalityFlag(driver.nationality ?? "");
@@ -44,12 +48,17 @@ export default async function DriverDetailPage({ params, searchParams }: DriverD
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
 
-      <Link
-        href={`/drivers?season=${season}`}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-f1-red)] transition-colors"
-      >
-        ← Volver a la lista
-      </Link>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <Link
+          href={`/drivers?season=${season}`}
+          className="inline-flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-f1-red)] transition-colors"
+        >
+          ← Volver a la lista
+        </Link>
+        <Suspense fallback={null}>
+          <SeasonSelector currentSeason={season} />
+        </Suspense>
+      </div>
 
       <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] mb-6">
         <div className="h-1.5 w-full" style={{ backgroundColor: teamMeta.primaryColor }} />

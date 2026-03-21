@@ -104,6 +104,7 @@ export function DriversPageClient({ standings, season }: DriversPageClientProps)
               <DriverCard
                 key={driver.driverId}
                 driver={driver}
+                season={season}
                 isFavorite={isFavorite(driver.driverId)}
                 onToggleFavorite={toggleFavorite}
               />

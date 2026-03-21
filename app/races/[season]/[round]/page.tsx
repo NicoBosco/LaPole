@@ -81,7 +81,7 @@ export default async function RaceDetailPage({ params }: RaceDetailPageProps) {
               return (
                 <Link
                   key={result.driverId}
-                  href={`/drivers/${result.driverId}`}
+                  href={`/drivers/${result.driverId}?season=${season}`}
                   className="grid grid-cols-[2.5rem_1fr_auto_auto_auto] items-center gap-3 px-4 py-3 border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface-raised)] transition-colors group"
                 >
                   <span className={`text-sm font-black tabular-nums ${isTopThree ? "text-[var(--color-f1-red)]" : "text-[var(--color-text-muted)]"}`}>

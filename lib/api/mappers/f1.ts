@@ -61,7 +61,7 @@ export function mapToProcessedRace(race: Race): ProcessedRace {
     date: raceDate,
     time: race.time,
     isPast: raceDate < now,
-    isNext: false, // Esto se calculará en el servicio si es necesario
+    isNext: false,
     hasSprint: !!race.Sprint,
     firstPractice: race.FirstPractice,
     secondPractice: race.SecondPractice,

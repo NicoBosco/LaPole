@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getConstructorById, getConstructorCurrentStanding, getConstructorSeasonResults } from "@/lib/api/constructors";
@@ -5,6 +6,7 @@ import { getDriverStandings } from "@/lib/api/races";
 import { getTeamMeta } from "@/constants/teams";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { SeasonSelector } from "@/components/ui/SeasonSelector";
 import { resolveSeason, getComparisonSeasons } from "@/lib/utils/season";
 import { ConstructorPerformanceChart } from "@/components/constructors/ConstructorPerformanceChart";
 
@@ -47,12 +49,17 @@ export default async function ConstructorDetailPage({ params, searchParams }: Co
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
 
-      <Link
-        href={`/constructors?season=${season}`}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-f1-red)] transition-colors"
-      >
-        ← Volver a la lista
-      </Link>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <Link
+          href={`/constructors?season=${season}`}
+          className="inline-flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-f1-red)] transition-colors"
+        >
+          ← Volver a la lista
+        </Link>
+        <Suspense fallback={null}>
+          <SeasonSelector currentSeason={season} />
+        </Suspense>
+      </div>
 
       <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] mb-6">
         <div className="h-1.5 w-full" style={{ backgroundColor: teamMeta.primaryColor }} />
@@ -101,7 +108,7 @@ export default async function ConstructorDetailPage({ params, searchParams }: Co
             {teamDrivers.map((s) => (
               <Link
                 key={s.driverId}
-                href={`/drivers/${s.driverId}`}
+                href={`/drivers/${s.driverId}?season=${season}`}
                 className="flex items-center gap-4 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 hover:bg-[var(--color-surface-raised)] hover:border-[var(--color-border-subtle)] transition-all group"
               >
                 <div

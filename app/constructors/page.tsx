@@ -1,8 +1,11 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getConstructorStandings } from "@/lib/api/races";
 import { getTeamMeta } from "@/constants/teams";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { SeasonSelector } from "@/components/ui/SeasonSelector";
 import { resolveSeason } from "@/lib/utils/season";
 
 export const metadata = {
@@ -24,11 +27,12 @@ export default async function ConstructorsPage({ searchParams }: ConstructorsPag
   } catch {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <EmptyState
-          title="No pudimos cargar los equipos"
-          description="Fallo la conexión con la API de F1. Probá recargando la página."
-          icon="⚠️"
-        />
+        <div className="mb-6 flex justify-end">
+          <Suspense fallback={null}>
+            <SeasonSelector currentSeason={season} />
+          </Suspense>
+        </div>
+        <ErrorState message="No pudimos cargar la clasificación de constructores." />
       </div>
     );
   }
@@ -37,12 +41,19 @@ export default async function ConstructorsPage({ searchParams }: ConstructorsPag
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
       <div className="mb-8 animate-fade-in-up">
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)] tracking-tight">
-          Equipos
-        </h1>
-        <p className="mt-2 text-[var(--color-text-secondary)]">
-          Clasificación de constructores — Temporada {season}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[var(--color-text-primary)] tracking-tight">
+              Equipos
+            </h1>
+            <p className="mt-2 text-[var(--color-text-secondary)]">
+              Clasificación de constructores — Temporada {season}
+            </p>
+          </div>
+          <Suspense fallback={null}>
+            <SeasonSelector currentSeason={season} />
+          </Suspense>
+        </div>
       </div>
 
       {standings.length === 0 ? (

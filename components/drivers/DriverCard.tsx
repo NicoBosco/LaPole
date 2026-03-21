@@ -6,11 +6,17 @@ import { Badge } from "@/components/ui/Badge";
 
 interface DriverCardProps {
   driver: ProcessedDriver;
+  season?: string;
   isFavorite?: boolean;
   onToggleFavorite?: (driverId: string) => void;
 }
 
-export function DriverCard({ driver, isFavorite = false, onToggleFavorite }: DriverCardProps) {
+export function DriverCard({
+  driver,
+  season,
+  isFavorite = false,
+  onToggleFavorite,
+}: DriverCardProps) {
   const { 
     driverId, 
     firstName, 
@@ -46,7 +52,7 @@ export function DriverCard({ driver, isFavorite = false, onToggleFavorite }: Dri
       )}
 
       <Link
-        href={`/drivers/${driverId}`}
+        href={season ? `/drivers/${driverId}?season=${season}` : `/drivers/${driverId}`}
         className="block p-4"
         tabIndex={0}
       >

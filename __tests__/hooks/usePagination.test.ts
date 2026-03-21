@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { usePagination } from '../../hooks/usePagination';
+import { act, renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { usePagination } from "../../hooks/usePagination";
 
-describe('usePagination', () => {
-  it('should initialize with page 1 and correct total pages', () => {
+describe("usePagination", () => {
+  it("initializes with page 1 and the expected slice", () => {
     const items = [1, 2, 3, 4, 5];
     const { result } = renderHook(() => usePagination(items, 2));
 
@@ -12,38 +12,76 @@ describe('usePagination', () => {
     expect(result.current.paginated).toEqual([1, 2]);
   });
 
-  it('should handle next and prev navigation', () => {
+  it("moves to the next and previous page within bounds", () => {
     const items = [1, 2, 3, 4, 5];
     const { result } = renderHook(() => usePagination(items, 2));
 
-    act(() => { result.current.next(); });
+    act(() => {
+      result.current.next();
+    });
+
     expect(result.current.page).toBe(2);
     expect(result.current.paginated).toEqual([3, 4]);
 
-    act(() => { result.current.prev(); });
+    act(() => {
+      result.current.prev();
+    });
+
     expect(result.current.page).toBe(1);
     expect(result.current.paginated).toEqual([1, 2]);
   });
 
-  it('should respect bounds on next and prev', () => {
+  it("clamps navigation when trying to go out of bounds", () => {
     const items = [1, 2];
     const { result } = renderHook(() => usePagination(items, 2));
 
-    act(() => { result.current.next(); });
-    expect(result.current.page).toBe(1); // Ya que el total de páginas es 1
+    act(() => {
+      result.current.goTo(99);
+    });
 
-    act(() => { result.current.prev(); });
+    expect(result.current.page).toBe(1);
+
+    act(() => {
+      result.current.prev();
+    });
+
     expect(result.current.page).toBe(1);
   });
 
-  it('should go to specific page and reset', () => {
+  it("keeps the rendered page safe when the list shrinks", () => {
+    const { result, rerender } = renderHook(
+      ({ items }) => usePagination(items, 2),
+      { initialProps: { items: [1, 2, 3, 4, 5] } }
+    );
+
+    act(() => {
+      result.current.goTo(3);
+    });
+
+    expect(result.current.page).toBe(3);
+    expect(result.current.paginated).toEqual([5]);
+
+    rerender({ items: [1, 2] });
+
+    expect(result.current.page).toBe(1);
+    expect(result.current.totalPages).toBe(1);
+    expect(result.current.paginated).toEqual([1, 2]);
+  });
+
+  it("can reset back to page 1", () => {
     const items = [1, 2, 3, 4, 5];
     const { result } = renderHook(() => usePagination(items, 2));
 
-    act(() => { result.current.goTo(3); });
+    act(() => {
+      result.current.goTo(3);
+    });
+
     expect(result.current.page).toBe(3);
-    
-    act(() => { result.current.reset(); });
+
+    act(() => {
+      result.current.reset();
+    });
+
     expect(result.current.page).toBe(1);
   });
 });

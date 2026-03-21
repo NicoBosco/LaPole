@@ -8,23 +8,8 @@ interface NextRaceCardProps {
   race: ProcessedRace;
 }
 
-/** Formatea la hora UTC para mostrar. Retorna ej. "14:00 UTC" */
 function formatUtcTime(time: string): string {
   return time.replace(/:00(?:Z)?$/, "Z").replace("Z", " UTC");
-}
-
-/** Convierte UTC a la hora de Argentina (UTC-3). Retorna ej. "11:00 🇦🇷" */
-function toArgentinaTime(date: Date): string {
-  try {
-    const local = date.toLocaleTimeString("es-AR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "America/Argentina/Buenos_Aires",
-    });
-    return `${local} 🇦🇷`;
-  } catch {
-    return "";
-  }
 }
 
 export function NextRaceCard({ race }: NextRaceCardProps) {
@@ -69,15 +54,10 @@ export function NextRaceCard({ race }: NextRaceCardProps) {
             </span>
           )}
           {race.time && (
-            <>
-              <span className="flex items-center gap-1.5">
-                <span className="text-[var(--color-f1-red)]">🕐</span>
-                {formatUtcTime(race.time)}
-              </span>
-              <span className="flex items-center gap-1.5">
-                {toArgentinaTime(race.date)}
-              </span>
-            </>
+            <span className="flex items-center gap-1.5">
+              <span className="text-[var(--color-f1-red)]">🕐</span>
+              {formatUtcTime(race.time)}
+            </span>
           )}
         </div>
 
@@ -112,20 +92,12 @@ function SessionBadge({
   label: string;
   session: { date: string; time: string };
 }) {
-  const dt = new Date(`${session.date}T${session.time}`);
-  const argentinaTime = toArgentinaTime(dt);
-
   return (
     <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2 text-xs">
       <span className="font-semibold text-[var(--color-text-primary)] block">{label}</span>
       <span className="text-[var(--color-text-muted)]">{formatRaceDate(session.date)}</span>
       {session.time && (
-        <div className="mt-0.5 space-y-0.5">
-          <p className="text-[var(--color-text-secondary)]">{formatUtcTime(session.time)}</p>
-          {argentinaTime && (
-            <p className="text-[var(--color-text-secondary)]">{argentinaTime}</p>
-          )}
-        </div>
+        <p className="mt-0.5 text-[var(--color-text-secondary)]">{formatUtcTime(session.time)}</p>
       )}
     </div>
   );

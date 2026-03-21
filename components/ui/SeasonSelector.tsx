@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AVAILABLE_SEASONS } from "@/constants/config";
 
 interface SeasonSelectorProps {
@@ -9,12 +9,13 @@ interface SeasonSelectorProps {
 
 export function SeasonSelector({ currentSeason }: SeasonSelectorProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   function selectSeason(season: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("season", season);
-    router.push(`/?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (

@@ -10,6 +10,7 @@ import { ProcessedDriver } from "@/types/driver";
 import { getTeamMeta } from "@/constants/teams";
 import { getNationalityFlag } from "@/lib/utils/formatters";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { SeasonSelector } from "@/components/ui/SeasonSelector";
 
 interface ComparePageClientProps {
   standings: ProcessedDriver[];
@@ -53,12 +54,17 @@ export function ComparePageClient({ standings, season }: ComparePageClientProps)
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
 
       <div className="mb-8 animate-fade-in-up">
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)] tracking-tight">
-          Comparar Pilotos
-        </h1>
-        <p className="mt-1 text-[var(--color-text-secondary)]">
-          Estadísticas lado a lado — Temporada {season}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[var(--color-text-primary)] tracking-tight">
+              Comparar Pilotos
+            </h1>
+            <p className="mt-1 text-[var(--color-text-secondary)]">
+              Estadísticas lado a lado — Temporada {season}
+            </p>
+          </div>
+          <SeasonSelector currentSeason={season} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 animate-fade-in-up" style={{ animationDelay: "0.05s" }}>
@@ -168,13 +174,13 @@ export function ComparePageClient({ standings, season }: ComparePageClientProps)
 
           <div className="grid grid-cols-2 gap-4">
             <Link
-              href={`/drivers/${driverA.driverId}`}
+              href={`/drivers/${driverA.driverId}?season=${season}`}
               className="flex items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] hover:border-[#e10600]/40 hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-text-primary)] transition-all"
             >
               Ver perfil de {driverA.lastName} →
             </Link>
             <Link
-              href={`/drivers/${driverB.driverId}`}
+              href={`/drivers/${driverB.driverId}?season=${season}`}
               className="flex items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm font-medium text-[var(--color-text-secondary)] hover:border-[#3b82f6]/40 hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-text-primary)] transition-all"
             >
               Ver perfil de {driverB.lastName} →
@@ -185,8 +191,6 @@ export function ComparePageClient({ standings, season }: ComparePageClientProps)
     </div>
   );
 }
-
-// ── Subcomponentes
 
 function DriverSelect({
   label, value, onChange, standings, excludeId, accentColor,

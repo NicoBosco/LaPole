@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | LaPole",
   },
   description:
-    "Sigue la temporada de Fórmula 1 en tiempo real. Clasificaciones, resultados, calendario y estadísticas de pilotos y constructores.",
+    "Seguimiento de la Fórmula 1 con clasificaciones, resultados, calendario y estadísticas actualizadas periódicamente.",
   keywords: ["Fórmula 1", "F1", "carreras", "pilotos", "standings", "dashboard"],
 };
 
