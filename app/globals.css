@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   Sistema de Diseño LaPole
+   Tokens estáticos (radio, fuentes, sombras) en @theme.
+   Tokens de color en :root (oscuro) y [data-theme="light"].
+   ───────────────────────────────────────────── */
+
+@theme inline {
+  /* Tipografía y layout — independientes del tema */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+
+  --shadow-card:  0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-glow:  0 0 20px rgba(225, 6, 0, 0.15);
+
+  /* Acento F1 — fijo en todos los temas */
+  --color-f1-red:        #e10600;
+  --color-f1-red-light:  #ff2a24;
+  --color-f1-red-muted:  rgba(225, 6, 0, 0.12);
+
+  /* Tokens semánticos — fijos */
+  --color-success:       #22c55e;
+  --color-warning:       #f59e0b;
+  --color-info:          #3b82f6;
+}
+
+/* Tema oscuro (por defecto) */
+:root {
+  --color-background:     #09090b;
+  --color-surface:        #111114;
+  --color-surface-raised: #18181c;
+  --color-border:         #27272a;
+  --color-border-subtle:  #1e1e22;
+
+  --color-text-primary:   #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted:     #52525b;
+
+  color-scheme: dark;
+}
+
+/* Tema claro */
+[data-theme="light"] {
+  --color-background:     #f4f4f5;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #f4f4f5;
+  --color-border:         #e4e4e7;
+  --color-border-subtle:  #d4d4d8;
+
+  --color-text-primary:   #09090b;
+  --color-text-secondary: #3f3f46;
+  --color-text-muted:     #71717a;
+
+  color-scheme: light;
+}
+
+/* Base */
+*, *::before, *::after {
+  border-color: var(--color-border);
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Barra de desplazamiento */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* Anillo de foco */
+:focus-visible {
+  outline: 2px solid var(--color-f1-red);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Selección */
+::selection {
+  background: var(--color-f1-red-muted);
+  color: var(--color-text-primary);
+}
+
+/* Animaciones */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in-up { animation: fade-in-up 0.4s ease-out both; }
+.animate-skeleton    { animation: skeleton-pulse 1.8s ease-in-out infinite; }
